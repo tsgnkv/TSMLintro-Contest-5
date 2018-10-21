@@ -8,6 +8,7 @@ def stack_pred(estimator, X, y, Xt, k, method):
         return sX, sXt - numpy.array
     """
     from sklearn.model_selection import KFold
+    import numpy as np
     
     if method == 'predict':
         sX = np.zeros(X.shape[0])
