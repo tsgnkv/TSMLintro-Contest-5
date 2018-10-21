@@ -10,5 +10,7 @@
   * k - number of folds
   * method - 'predict' или 'predict_proba'
 
+Функция возвращает для объекта Xs и Xst - numpy.array, которые содержат результаты стекинга для train и test data.
+
 По такому принципу реализуется стекинг в функции:
 ![Реализованный вариант стекинга](https://jeddy92.github.io/images/stack_diagram.png)
