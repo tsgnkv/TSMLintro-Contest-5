@@ -1,5 +1,3 @@
-from sklearn.model_selection import KFold
-
 def stack_pred(estimator, X, y, Xt, k, method):
     """
         estimator - sklearn classifier or regressor
@@ -9,6 +7,8 @@ def stack_pred(estimator, X, y, Xt, k, method):
         
         return sX, sXt - numpy.array
     """
+    from sklearn.model_selection import KFold
+    
     if method == 'predict':
         sX = np.zeros(X.shape[0])
         sXt = np.zeros(Xt.shape[0])
