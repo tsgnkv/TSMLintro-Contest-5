@@ -7,8 +7,9 @@ def stack_pred(estimator, X, y, Xt, k, method):
         
         return sX, sXt - numpy.array
     """
+
     from sklearn.model_selection import KFold
-    import numpy as np
+    from scipy.stats import mode
     
     if method == 'predict':
         sX = np.zeros(X.shape[0])
@@ -16,6 +17,7 @@ def stack_pred(estimator, X, y, Xt, k, method):
     elif method == 'predict_proba':
         sX = np.zeros((X.shape[0], np.unique(y).shape[0]))
         sXt = np.zeros((Xt.shape[0], np.unique(y).shape[0]))
+    
     
     if estimator._estimator_type == 'classifier':
         # classifier
@@ -30,7 +32,7 @@ def stack_pred(estimator, X, y, Xt, k, method):
             
             if method == 'predict':
                 sX[test_index] = estimator.predict(X_test)
-                sXt += estimator.predict(Xt)
+                sXt = np.concatenate((sXt, estimator.predict(Xt)), axis=0)
             elif method == 'predict_proba':
                 pred = estimator.predict_proba(X_test)                
                 sX[test_index] = pred
@@ -54,6 +56,14 @@ def stack_pred(estimator, X, y, Xt, k, method):
                 pred = estimator.predict_proba(X_test)
                 sX[test_index] = pred
                 sXt += estimator.predict_proba(Xt)
-            
-    sXt = sXt / k
+    
+    
+    if estimator._estimator_type == 'classifier' and method == 'predict':
+        # voting
+        sXt = np.reshape(sXt, (k+1, Xt.shape[0]))
+        sXt = mode(np.transpose(sXt), axis=1)[0].flatten()
+    else:
+        #average
+        sXt = sXt / k
+        
     return sX, sXt
